@@ -19,20 +19,32 @@ const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
+
     deprecationErrors: true,
   }
 });
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+     // Collections
+     const projectsCollections = client.db('personalDB').collection('projects');
+
+    //  Projects related API
+      // project submit 
+      app.post('/projects', async(req, res)=>{
+        const newItem = req.body;
+        const result = await projectsCollections.insertOne(newItem);
+        res.send(result)
+      })
+      // projects url
+      app.get('/projects', async(req, res)=>{
+        const result = await projectsCollections.find().toArray();
+        res.send(result)
+      })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
   }
 }
 run().catch(console.dir);
