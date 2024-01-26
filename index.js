@@ -31,16 +31,29 @@ async function run() {
 
     //  Projects related API
       // project submit 
-      app.post('/projects', async(req, res)=>{
+      app.post('/projects', async (req, res) => {
+        const result = await projectsCollections.find().toArray();
+        // Check if any project in the result array has the same title
+        const projectWithTitleExists = result.some((project) => project.title === req.body.title);
+         console.log(projectWithTitleExists)
+        if (projectWithTitleExists) {
+          return res.status(400).json({
+            message: 'Project Already Exists',
+            projectExists: true, // Custom property indicating that the project already exists
+          });
+        }
+      
         const newItem = req.body;
-        const result = await projectsCollections.insertOne(newItem);
-        res.send(result)
-      })
+        const insertResult = await projectsCollections.insertOne(newItem);
+        res.send(insertResult);
+      });
+      
       // projects url
       app.get('/projects', async(req, res)=>{
         const result = await projectsCollections.find().toArray();
         res.send(result)
       })
+      
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
