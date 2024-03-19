@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors())
@@ -27,25 +27,47 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
      // Collections
+     const clientsCollection = client.db('personalDB').collection('clients');
      const projectsCollections = client.db('personalDB').collection('projects');
 
     //  Projects related API
+// Fetch client by ID
+app.get('/clients/:id', async (req, res) => {
+  try {
+    const clientId = req.params.id;
+    const client = await clientsCollection.findOne({ _id: new ObjectId(clientId) });
+
+    if (client) {
+      res.json(client);
+    } else {
+      res.status(404).json({ message: 'Client not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching client:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}); 
+// Get all clients
+app.get('/clients', async (req, res) => {
+  try {
+    const clients = await clientsCollection.find().toArray();
+    res.json(clients);
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+    // client submit
+     app.post('/clients', async (req, res) => {
+  const newClient = req.body;
+  const insertResult = await clientsCollection.insertOne(newClient);
+  res.send(insertResult);
+});
+
       // project submit 
       app.post('/projects', async (req, res) => {
         const result = await projectsCollections.find().toArray();
-        // Check if any project in the result array has the same title
-        const projectWithTitleExists = result.some((project) => project.title === req.body.title);
-         console.log(projectWithTitleExists)
-        if (projectWithTitleExists) {
-          return res.status(400).json({
-            message: 'Project Already Exists',
-            projectExists: true, // Custom property indicating that the project already exists
-          });
-        }
-      
-        const newItem = req.body;
-        const insertResult = await projectsCollections.insertOne(newItem);
-        res.send(insertResult);
+        res.send(result);
       });
       
       // projects url
