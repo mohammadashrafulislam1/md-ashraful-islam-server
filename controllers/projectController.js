@@ -6,36 +6,13 @@ import { upload } from "../middleware/multer.js";
 export const addProject = async (req, res) => {
   try {
     // Check for required fields
-    if (!req.body.title || !req.body.description || !req.body.projectImage) {
+    if (!req.body.title || !req.body.description) {
       return res.status(400).json({ error: "Required fields are missing." });
     }
 
     let clientInfoId = null;
 
-    // Check if a client with the provided userName and userEmail exists
-    const existingClient = await clientModel.findOne({
-      userName: req.body.clientInfo.userName,
-      userEmail: req.body.clientInfo.userEmail
-    });
-
-    if (existingClient) {
-      // If the client already exists, use its ObjectId
-      clientInfoId = existingClient._id;
-    } else {
-      // Create a new client instance
-      const newClient = new clientModel({
-        userName: req.body.clientInfo.userName,
-        userEmail: req.body.clientInfo.userEmail,
-        userSocialMedia: req.body.clientInfo.userSocialMedia
-      });
-
-      // Save the new client to the database
-      const clientResult = await newClient.save();
-
-      // Use the ObjectId of the newly created client
-      clientInfoId = clientResult._id;
-    }
-    // Upload projectImage to Cloudinary
+       // Upload projectImage to Cloudinary
     const imageUploadResult = await cloudinary.uploader.upload(req.file.path);
 
     // Get the URL of the uploaded image from Cloudinary
@@ -51,11 +28,11 @@ export const addProject = async (req, res) => {
       technologies: req.body.technologies,
       duration: req.body.duration,
       challenges: req.body.challenges,
-      userName: req.body.userName,
-      userEmail: req.body.userEmail,
+      userName: req.body.userName || "Md Ashraful Islam",
+      userEmail: req.body.userEmail || "mohammadashrafulislam33@gmail.com",
       projectImage: imageUrl,
       galleryImages: imageUrl,
-      clientInfo: clientInfoId, // Assign the ObjectId of the existing or newly created client
+      clientInfo: clientInfoId || null, // Assign the ObjectId of the existing or newly created client
       isFeatured: req.body.isFeatured,
       mobileImage: imageUrl,
       tabletImage: imageUrl
