@@ -1,5 +1,7 @@
 import { projectModel } from "../Model/projects.js";
 import { clientModel } from "../model/Clients.js"; // Import the client model
+import { cloudinary } from "../utils/Cloudinary.js";
+import { upload } from "../middleware/multer.js";
 
 export const addProject = async (req, res) => {
   try {
@@ -33,6 +35,11 @@ export const addProject = async (req, res) => {
       // Use the ObjectId of the newly created client
       clientInfoId = clientResult._id;
     }
+    // Upload projectImage to Cloudinary
+    const imageUploadResult = await cloudinary.uploader.upload(req.file.path);
+
+    // Get the URL of the uploaded image from Cloudinary
+    const imageUrl = imageUploadResult.secure_url;
 
     // Create a new project instance
     const newProject = new projectModel({
@@ -46,12 +53,12 @@ export const addProject = async (req, res) => {
       challenges: req.body.challenges,
       userName: req.body.userName,
       userEmail: req.body.userEmail,
-      projectImage: req.body.projectImage,
-      galleryImages: req.body.galleryImages,
+      projectImage: imageUrl,
+      galleryImages: imageUrl,
       clientInfo: clientInfoId, // Assign the ObjectId of the existing or newly created client
       isFeatured: req.body.isFeatured,
-      mobileImage: req.body.mobileImage,
-      tabletImage: req.body.tabletImage
+      mobileImage: imageUrl,
+      tabletImage: imageUrl
     });
 
     // Save the new project to the database
