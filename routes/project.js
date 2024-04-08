@@ -1,6 +1,7 @@
 import express from "express";
 import { addProject } from "../controllers/projectController.js";
-
+import { upload } from "../middleware/multer.js";
 export const projectRouter = express.Router();
 
-projectRouter.post("/", addProject);
+projectRouter.post("/", upload.single('projectImage'), addProject);
+  
