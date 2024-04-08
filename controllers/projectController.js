@@ -1,7 +1,6 @@
 import { projectModel } from "../Model/projects.js";
-import { clientModel } from "../model/Clients.js"; // Import the client model
+import { clientModel } from "../model/Clients.js";
 import { cloudinary } from "../utils/Cloudinary.js";
-import { upload } from "../middleware/multer.js";
 
 export const addProject = async (req, res) => {
   try {
@@ -12,36 +11,61 @@ export const addProject = async (req, res) => {
 
     let clientInfoId = null;
 
-    // // Check if a client with the provided userName and userEmail exists
-    // const existingClient = await clientModel.findOne({
-    //   userName: req.body.clientInfo.userName,
-    //   userEmail: req.body.clientInfo.userEmail
-    // });
+        // Upload single images for projectImage, mobileImage, and tabletImage using upload.single()
+    const projectImageUpload = await upload.single("projectImage")(req, res);
+    const mobileImageUpload = await upload.single("mobileImage")(req, res);
+    const tabletImageUpload = await upload.single("tabletImage")(req, res);
 
-    // if (existingClient) {
-    //   // If the client already exists, use its ObjectId
-    //   clientInfoId = existingClient._id;
-    // } else {
-    //   // Create a new client instance
-    //   const newClient = new clientModel({
-    //     userName: req.body.clientInfo.userName || null,
-    //     userEmail: req.body.clientInfo.userEmail || null,
-    //     userSocialMedia: req.body.clientInfo.userSocialMedia || "#"
-    //   });
+    // Handle potential upload errors
+    if (
+      projectImageUpload.error ||
+      mobileImageUpload.error ||
+      tabletImageUpload.error
+    ) {
+      return res.status(500).json({ error: "Error uploading images." });
+    }
 
-    //   // Save the new client to the database
-    //   const clientResult = await newClient.save();
+    const projectImagePath = projectImageUpload ? projectImageUpload.path : null; // Handle missing files gracefully
+    const mobileImagePath = mobileImageUpload ? mobileImageUpload.path : null;
+    const tabletImagePath = tabletImageUpload ? tabletImageUpload.path : null;
 
-    //   // Use the ObjectId of the newly created client
-    //   clientInfoId = clientResult._id;
-    // }
-    // Upload projectImage to Cloudinary
-    const imageUploadResult = await cloudinary.uploader.upload(req.file.path);
+    // Upload gallery images using upload.array() for multiple file uploads
+    const galleryImagesUpload = await upload.array("galleryImages", 5)(req, res);
 
-    // Get the URL of the uploaded image from Cloudinary
-    const imageUrl = imageUploadResult.secure_url;
+    // Handle potential upload errors for gallery images
+    if (galleryImagesUpload.error) {
+      return res.status(500).json({ error: "Error uploading gallery images." });
+    }
 
-    // Create a new project instance
+    // Extract uploaded gallery image paths
+    const galleryImages = galleryImagesUpload.map((image) => image.path);
+
+    const uploadedImages = async () => {
+      const projectImageUrl = projectImagePath
+        ? await uploadToCloudinary(projectImagePath)
+        : null;
+      const mobileImageUrl = mobileImagePath
+        ? await uploadToCloudinary(mobileImagePath)
+        : null;
+      const tabletImageUrl = tabletImagePath
+        ? await uploadToCloudinary(tabletImagePath)
+        : null;
+      const galleryImageUrls = await Promise.all(
+        galleryImages.map((imagePath) => uploadToCloudinary(imagePath))
+      );
+
+      return {
+        projectImageUrl,
+        mobileImageUrl,
+        tabletImageUrl,
+        galleryImageUrls,
+      };
+    };
+
+    const { projectImageUrl, mobileImageUrl, tabletImageUrl, galleryImageUrls } =
+      await uploadedImages();
+
+    // Create a new project instance using the uploaded image URLs
     const newProject = new projectModel({
       title: req.body.title,
       description: req.body.description,
@@ -53,14 +77,13 @@ export const addProject = async (req, res) => {
       challenges: req.body.challenges,
       userName: req.body.userName || "Md Ashraful Islam",
       userEmail: req.body.userEmail || "mohammadashrafulislam33@gmail.com",
-      projectImage: imageUrl,
-      galleryImages: [],
-      clientInfo: clientInfoId || null, // Assign the ObjectId of the existing or newly created client
+      projectImage: projectImageUrl,
+      mobileImage: mobileImageUrl,
+      tabletImage: tabletImageUrl,
+      galleryImages: galleryImageUrls,
+      clientInfo: clientInfoId || null,
       isFeatured: req.body.isFeatured,
-      mobileImage: imageUrl,
-      tabletImage: imageUrl
     });
-
     // Save the new project to the database
     const savedProject = await newProject.save();
 
