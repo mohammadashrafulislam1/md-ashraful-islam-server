@@ -7,29 +7,40 @@ export const addProject = async (req, res) => {
     if (!req.body.title || !req.body.description || !req.body.projectImage) {
       return res.status(400).json({ error: "Required fields are missing." });
     }
-    let clientInfoId = null;
     // Check if a client with the provided userName and userEmail exists
     const existingClient = await clientModel.findOne({
-      userName: req.body.clientInfo.userName,
       userEmail: req.body.clientInfo.userEmail
     });
+
+    let clientInfoId = null;
+
     if (existingClient) {
       // If the client already exists, use its ObjectId
       clientInfoId = existingClient._id;
     } else {
       // Create a new client instance
       const newClient = new clientModel({
-        userName: req.body.clientInfo.userName,
-        userEmail: req.body.clientInfo.userEmail,
-        userSocialMedia: req.body.clientInfo.userSocialMedia
+        userName: req.body.clientName || "",
+        userEmail: req.body.clientEmail ||"",
+        userSocialMedia: req.body.clientSocialMedia ||""
       });
+
       // Save the new client to the database
       const clientResult = await newClient.save();
+
       // Use the ObjectId of the newly created client
       clientInfoId = clientResult._id;
     }
+    // check if project already exist or not
+    const existingProject = await projectModel.findOne({
+      title: req.body.title
+    })
+    if(existingProject){
+      return res.status(400).json({ error: "Project already exists." });
+    }
+    else{
+      
 
-    console.log(req.files['galleryImages'])
     const galleryImages = req.files['galleryImages'];
 
     // Upload each image in the gallery to Cloudinary and get their URLs
@@ -41,17 +52,6 @@ export const addProject = async (req, res) => {
 
     // Map the results to extract the secure URLs
     const galleryImagesSecureUrls = galleryImagesUrls.map(result => result.secure_url);
-
-    // Access uploaded files using req.files
-    // const projectImageFile = req.files['projectImage'][0];
-    // const mobileImageFile = req.files['mobileImage'][0];
-    // const tabletImageFile = req.files['tabletImage'][0];
-
-    // Upload images to Cloudinary (if needed)
-    // const projectImageResult = await cloudinary.uploader.upload(projectImageFile.path);
-    // console.log('hi', projectImageResult.secure_url)
-    // const mobileImageResult = await cloudinary.uploader.upload(mobileImageFile.path);
-    // const tabletImageResult = await cloudinary.uploader.upload(tabletImageFile.path);
 
     // Create a new project instance using the uploaded image URLs
     const newProject = new projectModel({
@@ -65,9 +65,9 @@ export const addProject = async (req, res) => {
       challenges: req.body.challenges,
       userName: req.body.userName || "Md Ashraful Islam",
       userEmail: req.body.userEmail || "mohammadashrafulislam33@gmail.com",
-      projectImage: 't',
-      mobileImage: '5',
-      tabletImage: '5',
+      projectImage: req.projectImage,
+      mobileImage: req.mobileImage,
+      tabletImage: req.tabletImage,
       galleryImages: galleryImagesSecureUrls, 
       clientInfo: clientInfoId || null,
       isFeatured: req.body.isFeatured,
@@ -78,6 +78,7 @@ export const addProject = async (req, res) => {
 
     // Respond with the saved project data
     res.status(201).json(savedProject);
+    }
   } catch (error) {
     // Handle error
     console.error("Error adding project:", error);
