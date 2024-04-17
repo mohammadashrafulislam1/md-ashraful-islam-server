@@ -9,9 +9,9 @@ export const addProject = async (req, res) => {
     }
     // Check if a client with the provided userName and userEmail exists
     const existingClient = await clientModel.findOne({
-      userEmail: req.body.clientInfo.userEmail
+      clientEmail: JSON.parse(req.body.clientInfo).userEmail
     });
-
+    console.log(JSON.parse(req.body.clientInfo).clientEmail);
     let clientInfoId = null;
 
     if (existingClient) {
@@ -20,9 +20,9 @@ export const addProject = async (req, res) => {
     } else {
       // Create a new client instance
       const newClient = new clientModel({
-        userName: req.body.clientName || "",
-        userEmail: req.body.clientEmail ||"",
-        userSocialMedia: req.body.clientSocialMedia ||""
+        clientName: JSON.parse(req.body.clientInfo).clientName,
+        clientEmail: JSON.parse(req.body.clientInfo).clientEmail,
+        clientSocialMedia: JSON.parse(req.body.clientInfo).clientSocialMedia
       });
 
       // Save the new client to the database
@@ -35,47 +35,39 @@ export const addProject = async (req, res) => {
     const existingProject = await projectModel.findOne({
       title: req.body.title
     })
-    if(existingProject){
+    
+    if (existingProject) {
       return res.status(400).json({ error: "Project already exists." });
-    }
-    else{
-      
+    } else {
 
-    const galleryImages = req.files['galleryImages'];
+      const galleryImages = req.files['galleryImages'];
 
-    // Upload each image in the gallery to Cloudinary and get their URLs
-    const galleryImagesUrls = await Promise.all(galleryImages.map(async (image) => {
-      const imagePath = image.path;
-      // Upload image to Cloudinary and push the promise to the array
-      return cloudinary.uploader.upload(imagePath);
-    }));
+      const galleryImagesUrls = await Promise.all(galleryImages.map(async (image) => {
+        const imagePath = image.path;
+        return cloudinary.uploader.upload(imagePath);
+      }));
 
-    // Map the results to extract the secure URLs
-    const galleryImagesSecureUrls = galleryImagesUrls.map(result => result.secure_url);
+      const galleryImagesSecureUrls = galleryImagesUrls.map(result => result.secure_url);
 
-    // Create a new project instance using the uploaded image URLs
-    const newProject = new projectModel({
-      title: req.body.title,
-      description: req.body.description,
-      projectCategory: req.body.projectCategory,
-      projectUrl: req.body.projectUrl,
-      githubUrl: req.body.githubUrl,
-      technologies: req.body.technologies,
-      duration: req.body.duration,
-      challenges: req.body.challenges,
-      userName: req.body.userName || "Md Ashraful Islam",
-      userEmail: req.body.userEmail || "mohammadashrafulislam33@gmail.com",
-      projectImage: req.projectImage,
-      mobileImage: req.mobileImage,
-      tabletImage: req.tabletImage,
-      galleryImages: galleryImagesSecureUrls, 
-      clientInfo: clientInfoId || null,
-      isFeatured: req.body.isFeatured,
-    });
-
-    // Save the new project to the database
-    const savedProject = await newProject.save();
-
+      const newProject = new projectModel({
+        title: req.body.title,
+        description: req.body.description,
+        projectCategory: req.body.projectCategory,
+        projectUrl: req.body.projectUrl,
+        githubUrl: req.body.githubUrl,
+        technologies: req.body.technologies,
+        duration: req.body.duration,
+        challenges: req.body.challenges,
+        userName: req.body.userName || "Md Ashraful Islam",
+        userEmail: req.body.userEmail || "mohammadashrafulislam33@gmail.com",
+        projectImage: req.body.projectImage,
+        mobileImage: req.body.mobileImage,
+        tabletImage: req.body.tabletImage,
+        galleryImages: galleryImagesSecureUrls,
+        clientInfo: clientInfoId || null,
+        isFeatured: req.body.isFeatured,
+      });
+      const savedProject = await newProject.save();
     // Respond with the saved project data
     res.status(201).json(savedProject);
     }
