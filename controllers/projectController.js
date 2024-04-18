@@ -9,7 +9,8 @@ export const addProject = async (req, res) => {
     }
     // Check if a client with the provided userName and userEmail exists
     const existingClient = await clientModel.findOne({
-      clientEmail: JSON.parse(req.body.clientInfo).userEmail
+      clientName: JSON.parse(req.body.clientInfo).clientName,
+      clientEmail: JSON.parse(req.body.clientInfo).clientEmail
     });
     console.log(JSON.parse(req.body.clientInfo).clientEmail);
     let clientInfoId = null;
@@ -37,7 +38,7 @@ export const addProject = async (req, res) => {
     })
     
     if (existingProject) {
-      return res.status(400).json({ error: "Project already exists." });
+      return res.status(400).json({ error: "Project already exists.", existingProject: true });
     } else {
 
       const galleryImages = req.files['galleryImages'];
