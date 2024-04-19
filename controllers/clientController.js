@@ -29,14 +29,14 @@ export const getOneClient = async(req, res)=>{
   if (client) {
     res.json(client);
   } else {
-    res.status(404).json({ message: 'Client not found' });
+    res.status(404).json({ error: 'Client not found' });
   }
   }
   catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-
+// get all clients
 export const getClients = async(req, res)=>{
   try{
     const clients = await clientModel.find();
@@ -49,5 +49,16 @@ export const getClients = async(req, res)=>{
   }
   catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+// delete client
+export const deleteClient = async (req, res)=>{
+  const clientId = req.params.id;
+  const deletedClient = await clientModel.deleteOne({_id: new ObjectId(clientId)})
+  if(deleteClient){
+    res.status(200).json({message: "Client successfully deleted."})
+  }
+  else{
+    res.status(400).json({error: "Cloud not delete client data"})
   }
 }
