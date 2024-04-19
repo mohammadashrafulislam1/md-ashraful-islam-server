@@ -113,3 +113,42 @@ export const deleteProject = async(req, res)=>{
     res.status(500).json({error: "Internal Server Error"})
   }
 }
+
+// update project by ID
+export const updateProjectController = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+    const body = req.body;
+
+    // Check if the project exists
+    const existingProject = await projectModel.findById(projectId);
+    if (!existingProject) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    // Update the project fields
+    existingProject.title = body.title || existingProject.title;
+    existingProject.description = body.description || existingProject.description;
+    existingProject.projectCategory = body.projectCategory || existingProject.projectCategory;
+    existingProject.projectUrl = body.projectUrl || existingProject.projectUrl;
+    existingProject.githubUrl = body.githubUrl || existingProject.githubUrl;
+    existingProject.technologies = body.technologies || existingProject.technologies;
+    existingProject.duration = body.duration || existingProject.duration;
+    existingProject.challenges = body.challenges || existingProject.challenges;
+    existingProject.userName = body.userName || existingProject.userName;
+    existingProject.userEmail = body.userEmail || existingProject.userEmail;
+    existingProject.projectImage = body.projectImage || existingProject.projectImage;
+    existingProject.mobileImage = body.mobileImage || existingProject.mobileImage;
+    existingProject.tabletImage = body.tabletImage || existingProject.tabletImage;
+    existingProject.galleryImages = body.galleryImages || existingProject.galleryImages;
+    existingProject.isFeatured = body.isFeatured || existingProject.isFeatured;
+
+    // Save the updated project
+    const updatedProject = await existingProject.save();
+
+    return res.json(updatedProject);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
