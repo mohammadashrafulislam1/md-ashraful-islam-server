@@ -1,7 +1,7 @@
 import { projectModel } from "../Model/projects.js";
 import { clientModel } from "../model/Clients.js";
 import { cloudinary } from "../utils/Cloudinary.js";
-
+// add project controller
 export const addProject = async (req, res) => {
   try {// Check for required fields
     if (!req.body.title || !req.body.description || !req.body.projectImage) {
@@ -78,3 +78,15 @@ export const addProject = async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 };
+// get projects controller
+export const getProjects = async (req, res)=>{
+  try{
+   const projects = await projectModel.find();
+   if(projects.length === 0){
+   return res.status(400).json({message: "No Products Found."})
+   }
+   res.json(projects)
+  } catch (e){
+    res.status(500).json({error: "Internal Server Error"})
+  }
+}
