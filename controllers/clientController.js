@@ -22,7 +22,7 @@ export const addClient = async(req, res)=>{
       }
 }
 // get single client
-export const getOneClient = async (req, res)=>{
+export const getOneClient = async(req, res)=>{
   try{
     const clientId =req.params.id;
   const client = await clientModel.findOne({_id: new ObjectId(clientId)});
@@ -31,6 +31,21 @@ export const getOneClient = async (req, res)=>{
   } else {
     res.status(404).json({ message: 'Client not found' });
   }
+  }
+  catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+export const getClients = async(req, res)=>{
+  try{
+    const clients = await clientModel.find();
+    if (clients) {
+      res.json(clients);
+    } else {
+      res.status(404).json({ message: 'Clients not found' });
+    }
+
   }
   catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
