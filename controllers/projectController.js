@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { projectModel } from "../Model/projects.js";
 import { clientModel } from "../model/Clients.js";
 import { cloudinary } from "../utils/Cloudinary.js";
@@ -92,6 +93,23 @@ export const getProjects = async (req, res)=>{
    }
    res.json(projects)
   } catch (e){
+    res.status(500).json({error: "Internal Server Error"})
+  }
+}
+
+// delete one project 
+export const deleteProject = async(req, res)=>{
+  try{
+    const projectId = req.params.id;
+    const project = await projectModel.deleteOne({_id: new ObjectId(projectId)})
+    if(project){
+      return res.status(200).json({message: "Project deleted successfully."})
+    }
+    else{
+      return res.status(300).json({error: "Failed to delete project"})
+    }
+  }
+  catch (e){
     res.status(500).json({error: "Internal Server Error"})
   }
 }
