@@ -3,11 +3,13 @@ import { clientModel } from "../model/Clients.js";
 import { cloudinary } from "../utils/Cloudinary.js";
 // add project controller
 export const addProject = async (req, res) => {
-  try {// Check for required fields
+  try {
+    // Check for required fields
     if (!req.body.title || !req.body.description || !req.body.projectImage) {
       return res.status(400).json({ error: "Required fields are missing." });
     }
-    // Check if a client with the provided userName and userEmail exists
+
+    // Check if a client with the provided clientName and clientEmail exists
     const existingClient = await clientModel.findOne({
       clientName: JSON.parse(req.body.clientInfo).clientName,
       clientEmail: JSON.parse(req.body.clientInfo).clientEmail
@@ -15,6 +17,7 @@ export const addProject = async (req, res) => {
     console.log(JSON.parse(req.body.clientInfo).clientEmail);
     let clientInfoId = null;
 
+  //  check if client already exist
     if (existingClient) {
       // If the client already exists, use its ObjectId
       clientInfoId = existingClient._id;
@@ -32,17 +35,16 @@ export const addProject = async (req, res) => {
       // Use the ObjectId of the newly created client
       clientInfoId = clientResult._id;
     }
+
+    // ---------------------
     // check if project already exist or not
     const existingProject = await projectModel.findOne({
       title: req.body.title
     })
-    
     if (existingProject) {
       return res.status(400).json({ error: "Project already exists.", existingProject: true });
     } else {
-
       const galleryImages = req.files['galleryImages'];
-
       const galleryImagesUrls = await Promise.all(galleryImages.map(async (image) => {
         const imagePath = image.path;
         return cloudinary.uploader.upload(imagePath);
@@ -72,12 +74,15 @@ export const addProject = async (req, res) => {
     // Respond with the saved project data
     res.status(201).json(savedProject);
     }
-  } catch (error) {
+  } 
+  
+catch (error) {
     // Handle error
     console.error("Error adding project:", error);
     return res.status(500).send("Internal Server Error");
   }
 };
+
 // get projects controller
 export const getProjects = async (req, res)=>{
   try{
