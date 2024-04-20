@@ -92,7 +92,21 @@ export const getProjects = async (req, res)=>{
    return res.status(400).json({message: "No Products Found."})
    }
    res.json(projects)
-  } catch (e){
+  } catch (error){
+    res.status(500).json({error: "Internal Server Error"})
+  }
+}
+// get One project
+export const getOneProject = async(req, res)=>{
+  try{
+    const projectId = req.params.id;
+    const project = await projectModel.findOne({_id: new ObjectId(projectId)})
+    if(project){
+      res.json(project);
+    } else {
+      res.status(404).json({ error: 'Project not found' });
+    }
+    } catch (error){
     res.status(500).json({error: "Internal Server Error"})
   }
 }
