@@ -2,6 +2,7 @@ import express from "express";
 import { addClient, deleteClient, getClients, getOneClient } from "../controllers/clientController.js";
 
 export const clientRouter = express.Router();
+
 // add client (only work separately)
 clientRouter.post('/', addClient)
 // get single client

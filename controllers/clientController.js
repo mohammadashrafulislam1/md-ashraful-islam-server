@@ -21,6 +21,7 @@ export const addClient = async(req, res)=>{
         res.status(500).json({ error: "Internal Server Error" });
       }
 }
+
 // get single client
 export const getOneClient = async(req, res)=>{
   try{
@@ -36,6 +37,7 @@ export const getOneClient = async(req, res)=>{
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
 // get all clients
 export const getClients = async(req, res)=>{
   try{
@@ -51,6 +53,7 @@ export const getClients = async(req, res)=>{
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
 // delete client
 export const deleteClient = async (req, res)=>{
   const clientId = req.params.id;
