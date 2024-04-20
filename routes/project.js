@@ -12,4 +12,6 @@ projectRouter.get("/", getProjects)
 // delete project router
 projectRouter.delete("/:id", deleteProject)
 // update project router
-projectRouter.put("/:id", updateProjectController)
+projectRouter.put("/:id", upload.fields([
+  { name: 'galleryImages', maxCount: 5 }
+]), updateProjectController)

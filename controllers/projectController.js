@@ -115,9 +115,10 @@ export const deleteProject = async(req, res)=>{
 }
 
 // update project by ID
+// update project by ID
 export const updateProjectController = async (req, res) => {
   try {
-    const projectId = req.params.projectId;
+    const projectId = req.params.id;
     const body = req.body;
 
     // Check if the project exists
@@ -140,8 +141,17 @@ export const updateProjectController = async (req, res) => {
     existingProject.projectImage = body.projectImage || existingProject.projectImage;
     existingProject.mobileImage = body.mobileImage || existingProject.mobileImage;
     existingProject.tabletImage = body.tabletImage || existingProject.tabletImage;
-    existingProject.galleryImages = body.galleryImages || existingProject.galleryImages;
     existingProject.isFeatured = body.isFeatured || existingProject.isFeatured;
+
+    // Handle gallery images
+    if (req.files && req.files['galleryImages']) {
+      const galleryImages = req.files['galleryImages'];
+      const galleryImagesUrls = await Promise.all(galleryImages.map(async (image) => {
+        const imagePath = image.path;
+        return cloudinary.uploader.upload(imagePath);
+      }));
+      existingProject.galleryImages = galleryImagesUrls.map(result => result.secure_url);
+    }
 
     // Save the updated project
     const updatedProject = await existingProject.save();
@@ -152,3 +162,4 @@ export const updateProjectController = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
