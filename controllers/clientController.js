@@ -3,11 +3,13 @@ import { clientModel } from "../model/Clients.js";
 
 export const addClient = async(req, res)=>{
     try {
+      const imageResult = await cloudinary.uploader.upload(req.file.path);
         // Create a new client instance
         const newClient = new clientModel({
-          userName: req.body.userName,
-          userEmail: req.body.userEmail,
-          userSocialMedia: req.body.userSocialMedia
+          clientPhoto: imageResult.secure_url,
+          clientName: req.body.clientName,
+          clientEmail: req.body.clientEmail,
+          clientSocialMedia: req.body.clientSocialMedia
         });
     
         // Save the new client to the database

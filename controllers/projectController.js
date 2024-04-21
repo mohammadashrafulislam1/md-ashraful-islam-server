@@ -25,6 +25,7 @@ export const addProject = async (req, res) => {
     } else {
       // Create a new client instance
       const newClient = new clientModel({
+        clientPhoto: JSON.parse(req.body.clientInfo).clientPhoto,
         clientName: JSON.parse(req.body.clientInfo).clientName,
         clientEmail: JSON.parse(req.body.clientInfo).clientEmail,
         clientSocialMedia: JSON.parse(req.body.clientInfo).clientSocialMedia
