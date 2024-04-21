@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const clientSchema = new mongoose.Schema({
     clientName: { type: String},
+    clientPhoto:{type: String},
     clientEmail: { type: String },
     clientSocialMedia: { type: String }
   });
