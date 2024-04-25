@@ -1,3 +1,5 @@
+import {testimonialModel} from '../model/Testimonial.js'
+import { cloudinary } from '../utils/Cloudinary.js';
 export const addTestimonial = async(req, res) =>{
     try{
         const imageResult = await cloudinary.uploader.upload(req.file.path);

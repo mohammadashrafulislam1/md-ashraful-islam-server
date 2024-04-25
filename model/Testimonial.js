@@ -11,4 +11,4 @@ const testimonialSchema = new mongoose.Schema({
     isActive:{type: Boolean, default: false}
 })
 
-export const testimonialModel = mongoose.model("clients", testimonialSchema);
+export const testimonialModel = mongoose.model("testimonials", testimonialSchema);

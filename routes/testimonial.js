@@ -1,6 +1,6 @@
 import express from "express";
-import { upload } from "../middleware/multer";
-import { addTestimonial } from "../controllers/testimonialController";
+import { upload } from "../middleware/multer.js";
+import { addTestimonial } from "../controllers/testimonialController.js";
 
 
 export const testRouter = express.Router();
