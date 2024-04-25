@@ -60,6 +60,7 @@ export const addProject = async (req, res) => {
         projectCategory: req.body.projectCategory,
         projectUrl: req.body.projectUrl,
         githubUrl: req.body.githubUrl,
+        githubUrlServer: req.body.githubUrlServer,
         technologies: req.body.technologies,
         duration: req.body.duration,
         challenges: req.body.challenges,
@@ -148,6 +149,7 @@ export const updateProjectController = async (req, res) => {
     existingProject.projectCategory = body.projectCategory || existingProject.projectCategory;
     existingProject.projectUrl = body.projectUrl || existingProject.projectUrl;
     existingProject.githubUrl = body.githubUrl || existingProject.githubUrl;
+    existingProject.githubUrlServer = body.githubUrlServer || existingProject.githubUrlServer;
     existingProject.technologies = body.technologies || existingProject.technologies;
     existingProject.duration = body.duration || existingProject.duration;
     existingProject.challenges = body.challenges || existingProject.challenges;
