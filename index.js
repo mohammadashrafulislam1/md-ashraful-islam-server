@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { projectRouter } from './routes/project.js'; 
 import dotenv from "dotenv";
 import { clientRouter } from "./routes/client.js";
+import { testRouter } from "./routes/testimonial.js";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -22,6 +23,7 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cl
 
 app.use('/projects', projectRouter);
 app.use('/clients', clientRouter)
+app.use('/testimonial', testRouter)
 
 app.get('/', (req, res)=>{
   res.json({msg: 'app is running'})
