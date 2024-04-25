@@ -1,6 +1,6 @@
 export const addTestimonial = async(req, res) =>{
     try{
-
+        const imageResult = await cloudinary.uploader.upload(req.file.path);
     }
     catch (e){
             // Handle error
