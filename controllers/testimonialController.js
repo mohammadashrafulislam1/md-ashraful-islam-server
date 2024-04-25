@@ -22,3 +22,11 @@ export const addTestimonial = async(req, res) =>{
             res.status(500).json({ e: "Internal Server Error" });
           }
 }
+export const getTestimonials = async(req, res)=>{
+    try{
+
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+}
