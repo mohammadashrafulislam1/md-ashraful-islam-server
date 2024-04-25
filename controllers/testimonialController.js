@@ -24,7 +24,12 @@ export const addTestimonial = async(req, res) =>{
 }
 export const getTestimonials = async(req, res)=>{
     try{
-
+     const testimonials = await testimonialModel.find();
+     if (testimonials) {
+        res.json(testimonials);
+      } else {
+        res.status(404).json({ message: 'Testimonials not found' });
+      }
     }
     catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
