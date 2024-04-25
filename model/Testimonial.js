@@ -10,3 +10,5 @@ const testimonialSchema = new mongoose.Schema({
     socialMedia: {type: String},
     isActive:{type: Boolean, default: false}
 })
+
+export const testimonialModel = mongoose.model("clients", testimonialSchema);
