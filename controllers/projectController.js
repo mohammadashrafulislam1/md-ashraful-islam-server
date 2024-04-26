@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { projectModel } from "../Model/projects.js";
+import { projectModel } from "../model/Projects.js";
 import { clientModel } from "../model/Clients.js";
 import { cloudinary } from "../utils/Cloudinary.js";
 // add project controller
