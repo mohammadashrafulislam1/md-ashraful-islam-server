@@ -6,6 +6,7 @@ const projectSchema = new mongoose.Schema({
     projectCategory: { type: String },
     projectUrl: { type: String },
     githubUrl: { type: String },
+    githubUrlServer: { type: String },
     technologies: [String],
     duration: { type: String },
     challenges: { type: String },

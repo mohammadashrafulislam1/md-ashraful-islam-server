@@ -16,10 +16,14 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.g2lboph.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`).then(()=>{
+try {
+  await mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.g2lboph.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`);
   console.log("connected-DB");
- })
-.catch((e)=>{console.log(e)});
+} catch (e) {
+  console.error(e);
+  // Handle connection error appropriately (e.g., return an error message)
+}
+
 
 app.use('/projects', projectRouter);
 app.use('/clients', clientRouter)
