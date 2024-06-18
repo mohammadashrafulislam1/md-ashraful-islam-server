@@ -17,7 +17,7 @@ app.use(cors())
 app.use(express.json())
 
 try {
-  await mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.g2lboph.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`);
+  await mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.g2lboph.mongodb.net/personalDB?retryWrites=true&w=majority&appName=Cluster0`);
   console.log("connected-DB");
 } catch (e) {
   console.error(e);
