@@ -18,6 +18,10 @@ const projectSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'clients'
     },
+    testimonial: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'testimonials'
+    },
     isFeatured: { type: Boolean, default: false },
     mobileImage: { type: String },
     tabletImage: { type: String }

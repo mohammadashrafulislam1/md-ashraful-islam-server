@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { projectModel } from "../model/Projects.js";
 import { clientModel } from "../model/Clients.js";
-import { cloudinary } from "../utils/Cloudinary.js";
+import { cloudinary } from "../utils/cloudinary.js";
 // add project controller
 export const addProject = async (req, res) => {
   try {

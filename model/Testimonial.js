@@ -8,7 +8,7 @@ const testimonialSchema = new mongoose.Schema({
     rating:{type: Number},
     des: {type: String},
     socialMedia: {type: String},
-    isActive:{type: Boolean, default: false}
+    isActive:{type: Boolean, default: true}
 })
 
 export const testimonialModel = mongoose.model("testimonials", testimonialSchema);
