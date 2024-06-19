@@ -1,5 +1,7 @@
 import {testimonialModel} from '../model/Testimonial.js'
 
+
+// Add Testimonial Controller
 export const addTestimonial = async(req, res) =>{
     try{
       const testimonial = new testimonialModel({
@@ -22,6 +24,8 @@ export const addTestimonial = async(req, res) =>{
             res.status(500).json({ e: "Internal Server Error" });
           }
 }
+
+// Get Testimonial Controller
 export const getTestimonials = async(req, res)=>{
     try{
      const testimonials = await testimonialModel.find();
@@ -36,15 +40,16 @@ export const getTestimonials = async(req, res)=>{
       }
 }
 
+
+// Delete Testimonial Controller
 export const deleteTestimonial = async (req, res) => {
-  const id =req.params.id;
+  const id = req.params.id;
   try{
-   const testimonial = new testimonialModel.deleteOne(id);
-   if (testimonial) {
-    return res.status(200).json({ message: "Testimonial deleted successfully." });
-  } else {
-    return res.status(300).json({ error: "Failed to delete testimonial" });
-  }
+   const testimonialDeleted = await testimonialModel.findByIdAndDelete(id);
+   if (!testimonialDeleted) {
+    return res.status(404).json({ message: "Cloud not found testimonial" });
+  } 
+  return res.status(200).json({ message: "Testimonial deleted successfully." });
   }
   catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
