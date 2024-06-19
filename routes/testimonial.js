@@ -7,3 +7,4 @@ export const testRouter = express.Router();
 
 testRouter.post('/', addTestimonial)
 testRouter.get('/', getTestimonials)
+testRouter.delete('/', deleteTestimonial)

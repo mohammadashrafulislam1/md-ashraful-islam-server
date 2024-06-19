@@ -35,3 +35,18 @@ export const getTestimonials = async(req, res)=>{
         res.status(500).json({ error: 'Internal Server Error' });
       }
 }
+
+export const deleteTestimonial = async (req, res) => {
+  const id =req.params.id;
+  try{
+   const testimonial = new testimonialModel.deleteOne(id);
+   if (testimonial) {
+    return res.status(200).json({ message: "Testimonial deleted successfully." });
+  } else {
+    return res.status(300).json({ error: "Failed to delete testimonial" });
+  }
+  }
+  catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
