@@ -1,11 +1,9 @@
 import {testimonialModel} from '../model/Testimonial.js'
-import { cloudinary } from '../utils/cloudinary.js'
 
 export const addTestimonial = async(req, res) =>{
     try{
-        const imageResult = await cloudinary.uploader.upload(req.file.path);
       const testimonial = new testimonialModel({
-        image: imageResult.secure_url,
+        image: req.body.image,
         name: req.body.name,
         email: req.body.email,
         testimonial: req.body.testimonial,
@@ -14,6 +12,7 @@ export const addTestimonial = async(req, res) =>{
         socialMedia: req.body.socialMedia,
         isActive: req.body.isActive
       })
+      console.log(testimonial)
       const insert = await testimonial.save();
       res.status(201).json(insert);
     }

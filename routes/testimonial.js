@@ -5,5 +5,5 @@ import { addTestimonial, getTestimonials } from "../controllers/testimonialContr
 
 export const testRouter = express.Router();
 
-testRouter.post('/', upload.single('image'), addTestimonial)
+testRouter.post('/', addTestimonial)
 testRouter.get('/', getTestimonials)
