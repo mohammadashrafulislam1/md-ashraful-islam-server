@@ -29,8 +29,6 @@ jobs:
      
       - name: Create .env File
         run: |
-          echo "DB_USER=${{ secrets.DB_USER }}"
-          echo "DB_PASS=${{ secrets.DB_PASS }}"
           echo "DB_USER=${{ secrets.DB_USER }}" > /home/ubuntu/md-ashraful-islam-server/.env
           echo "DB_PASS=${{ secrets.DB_PASS }}" >> /home/ubuntu/md-ashraful-islam-server/.env
           cat /home/ubuntu/md-ashraful-islam-server/.env  # Debug: Output .env contents
