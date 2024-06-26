@@ -22,16 +22,19 @@ jobs:
 
       - name: Install PM2 Globally
         run: sudo npm install -g pm2
-
-      - name: Create .env File
-        run: |
-          echo "DB_USER=${{ secrets.DB_USER }}" > /home/ubuntu/md-ashraful-islam-server/.env
-          echo "DB_PASS=${{ secrets.DB_PASS }}" >> /home/ubuntu/md-ashraful-islam-server/.env
-
+        
       - name: Sync Backend Directory
         run: |
           rsync -av --delete /home/ubuntu/actions-runner-backend/_work/md-ashraful-islam-server/md-ashraful-islam-server/ /home/ubuntu/md-ashraful-islam-server/
-
+     
+      - name: Create .env File
+        run: |
+          echo "DB_USER=${{ secrets.DB_USER }}"
+          echo "DB_PASS=${{ secrets.DB_PASS }}"
+          echo "DB_USER=${{ secrets.DB_USER }}" > /home/ubuntu/md-ashraful-islam-server/.env
+          echo "DB_PASS=${{ secrets.DB_PASS }}" >> /home/ubuntu/md-ashraful-islam-server/.env
+          cat /home/ubuntu/md-ashraful-islam-server/.env  # Debug: Output .env contents
+    
       - name: Install Dependencies
         run: |
           cd /home/ubuntu/md-ashraful-islam-server
