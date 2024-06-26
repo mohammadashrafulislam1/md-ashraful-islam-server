@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import { clientRouter } from "./routes/client.js";
 import { testRouter } from "./routes/testimonial.js";
 
-// Load environment variables from .env file
+// Load environment variables from .env file.
 dotenv.config();
 
 // express app
