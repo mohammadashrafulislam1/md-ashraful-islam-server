@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: Install PM2 Globally
         run: sudo npm install -g pm2
@@ -41,9 +41,7 @@ jobs:
       - name: Restart Backend with PM2
         run: |
           cd /home/ubuntu/md-ashraful-islam-server
-          # Kill any process running on port 4000
-          sudo fuser -k 4000/tcp || true
           # Stop any existing PM2 process
           pm2 stop ./index.js || true
           # Start the new process
-          pm2 start ./index.js --name md-ashraful-islam-server -- -f --port 4000 --no-autorestart
+          pm2 start ./index.js
