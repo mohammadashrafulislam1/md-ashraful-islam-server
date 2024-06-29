@@ -1,4 +1,7 @@
-name: Deploy Application
+name: Vercel Production Deployment
+
+env:
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 on:
   push:
@@ -6,42 +9,20 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: self-hosted
+  Deploy-Production:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18'
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
 
-      - name: Install PM2 Globally
-        run: sudo npm install -g pm2
-        
-      - name: Sync Backend Directory
-        run: |
-          rsync -av --delete /home/ubuntu/actions-runner-backend/_work/md-ashraful-islam-server/md-ashraful-islam-server/ /home/ubuntu/md-ashraful-islam-server/
-     
-      - name: Create .env File
-        run: |
-          echo "DB_USER=Mdashrafulislam" > /home/ubuntu/md-ashraful-islam-server/.env
-          echo "DB_PASS=FsIdxs5VQ6rEFcha" >> /home/ubuntu/md-ashraful-islam-server/.env
-          cat /home/ubuntu/md-ashraful-islam-server/.env  # Debug: Output .env contents
-    
-      - name: Install Dependencies
-        run: |
-          cd /home/ubuntu/md-ashraful-islam-server
-          npm install
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Restart Backend with PM2
-        run: |
-          cd /home/ubuntu/md-ashraful-islam-server
-          # Stop any existing PM2 process
-          pm2 stop ./index.js || true
-          # Start the new process
-          pm2 start ./index.js
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
