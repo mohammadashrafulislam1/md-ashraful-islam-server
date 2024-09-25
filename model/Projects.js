@@ -24,7 +24,8 @@ const projectSchema = new mongoose.Schema({
     },
     isFeatured: { type: Boolean, default: false },
     mobileImage: { type: String },
-    tabletImage: { type: String }
+    tabletImage: { type: String },
+    created_at:{type: Date, default: Date.now}
   });
 
 export const projectModel = mongoose.model("projects", projectSchema);
