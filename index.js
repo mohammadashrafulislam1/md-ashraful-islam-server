@@ -14,8 +14,12 @@ const app = express();
 
 // middleware
 app.use(cors({
-  origin: 'https://mdashrafulislam-portfolio.netlify.app'
-}))
+  origin: 'https://mdashrafulislam-portfolio.netlify.app', // Allow Netlify origin
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true
+}));
+
 app.use(express.json())
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.g2lboph.mongodb.net/personalDB?retryWrites=true&w=majority&appName=Cluster0`)
