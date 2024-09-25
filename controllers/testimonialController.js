@@ -40,6 +40,22 @@ export const getTestimonials = async(req, res)=>{
       }
 }
 
+// Update Testimonial Controller
+export const updateTestimonial = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const updatedTestimonial = await testimonialModel.findByIdAndUpdate(id, req.body, { new: true });
+
+    if (!updatedTestimonial) {
+      return res.status(404).json({ message: "Testimonial not found" });
+    }
+
+    res.json(updatedTestimonial);
+  } catch (error) {
+    console.error("Error updating testimonial:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 // Delete Testimonial Controller
 export const deleteTestimonial = async (req, res) => {

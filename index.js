@@ -13,16 +13,18 @@ dotenv.config();
 const app = express();
 
 // middleware
-app.use(cors())
+app.use(cors({
+  origin: 'https://mdashrafulislam-portfolio.netlify.app'
+}))
 app.use(express.json())
 
-try {
-  await mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.g2lboph.mongodb.net/personalDB?retryWrites=true&w=majority&appName=Cluster0`);
-  console.log("connected-DB");
-} catch (e) {
-  console.error(e);
-  // Handle connection error appropriately (e.g., return an error message)
-}
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.g2lboph.mongodb.net/personalDB?retryWrites=true&w=majority&appName=Cluster0`)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+  });
 
 
 app.use('/projects', projectRouter);
