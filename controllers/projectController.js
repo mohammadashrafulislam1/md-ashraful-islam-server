@@ -7,6 +7,7 @@ import { testimonialModel } from "../model/Testimonial.js";
 // Add project controller
 export const addProject = async (req, res) => {
   try {
+    console.log(req.files['galleryImages'])
     // Check for required fields
     if (!req.body.title || !req.body.description || !req.body.projectImage) {
       return res.status(400).json({ error: "Required fields are missing." });
