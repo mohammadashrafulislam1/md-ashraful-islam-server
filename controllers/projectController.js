@@ -93,7 +93,7 @@ export const addProject = async (req, res) => {
       projectImage: req.body.projectImage,
       mobileImage: req.body.mobileImage,
       tabletImage: req.body.tabletImage,
-      galleryImages: galleryImagesSecureUrls,
+      galleryImages: galleryImagesSecureUrls ||{},
       clientInfo: clientInfoId,
       testimonial: testimonialId,
       isFeatured: req.body.isFeatured,
