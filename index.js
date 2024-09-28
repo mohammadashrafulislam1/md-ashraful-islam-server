@@ -12,13 +12,20 @@ dotenv.config();
 // express app
 const app = express();
 
-// middleware
 app.use(cors({
-  origin: 'https://mdashrafulislam-portfolio.netlify.app, *', // Allow Netlify origin
+  origin: function(origin, callback) {
+    const allowedOrigins = ['https://mdashrafulislam-portfolio.netlify.app', 'http://localhost:3000'];
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
   credentials: true
 }));
+
 
 app.use(express.json())
 
