@@ -14,7 +14,7 @@ const app = express();
 
 // middleware
 app.use(cors({
-  origin: 'https://mdashrafulislam-portfolio.netlify.app', // Allow Netlify origin
+  origin: 'https://mdashrafulislam-portfolio.netlify.app, http://localhost:5173', // Allow Netlify origin
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
   credentials: true
