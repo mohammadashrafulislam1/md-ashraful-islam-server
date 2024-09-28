@@ -14,7 +14,7 @@ const app = express();
 
 app.use(cors({
   origin: function(origin, callback) {
-    const allowedOrigins = ['https://mdashrafulislam-portfolio.netlify.app', 'http://localhost:3000'];
+    const allowedOrigins = ['https://mdashrafulislam-portfolio.netlify.app', 'http://localhost:5173'];
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
