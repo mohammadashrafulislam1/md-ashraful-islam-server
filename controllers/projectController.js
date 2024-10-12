@@ -121,20 +121,22 @@ export const getProjects = async (req, res) => {
   }
 };
 
-// Get one project
+// Get one project by title
 export const getOneProject = async (req, res) => {
   try {
-    const projectId = req.params.id;
-    const project = await projectModel.findOne({ _id: new ObjectId(projectId) });
+    const { title } = req.params;
+    const project = await projectModel.findOne({ title: title });
+    
     if (project) {
       res.json(project);
     } else {
       res.status(404).json({ error: 'Project not found' });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 // Delete one project
 export const deleteProject = async (req, res) => {
