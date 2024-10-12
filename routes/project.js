@@ -11,7 +11,7 @@ projectRouter.post("/", upload.fields([
 // get projects router
 projectRouter.get("/", getProjects)
 // get One Project router
-projectRouter.get("/:id", getOneProject)
+projectRouter.get("/:title", getOneProject)
 // delete project router
 projectRouter.delete("/:id", deleteProject)
 // update project router
