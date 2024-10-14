@@ -6,7 +6,7 @@ export const projectRouter = express.Router();
 
 // add project router
 projectRouter.post("/", upload.fields([
-  { name: 'galleryImages', maxCount: 5 }
+  { name: 'galleryImages', maxCount: 20 }
 ]), addProject);
 // get projects router
 projectRouter.get("/", getProjects)
