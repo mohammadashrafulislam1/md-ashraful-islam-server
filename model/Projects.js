@@ -23,7 +23,7 @@ const projectSchema = new mongoose.Schema({
       ref: 'testimonials'
     },
     isFeatured: { type: Boolean, default: false },
-    mobileImage: { type: String },
+    mobileImage: [String],
     tabletImage: { type: String },
     created_at:{type: Date, default: Date.now}
   });
