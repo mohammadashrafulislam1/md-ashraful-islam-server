@@ -42,13 +42,8 @@ export const addProject = async (req, res) => {
     // Check if a testimonial with the provided details exists
     const testimonialData = JSON.parse(req.body.testimonial);
 
-    const existingTestimonial = await testimonialModel.findOne({
-      email: testimonialData.email
-    });
     let testimonialId = null;
-    if (existingTestimonial) {
-      testimonialId = existingTestimonial._id;
-    } else {
+    
       const clientPhotoUrl = await cloudinary.uploader.upload(clientInfo.clientPhoto);
       const newTestimonial = new testimonialModel({
         image: clientPhotoUrl.secure_url,
@@ -58,10 +53,10 @@ export const addProject = async (req, res) => {
         rating: testimonialData.rating,
         des: testimonialData.des,
         socialMedia: testimonialData.socialMedia
-      });
+      })
       const testimonialResult = await newTestimonial.save();
       testimonialId = testimonialResult._id;
-    }
+    
 
     // Check if the project already exists
     const existingProject = await projectModel.findOne({ title: req.body.title });
